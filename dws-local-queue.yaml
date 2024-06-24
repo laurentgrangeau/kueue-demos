@@ -4,4 +4,4 @@ metadata:
   namespace: "default"
   name: "dws-local-queue"
 spec:
-  clusterQueue: "dws-cluster-queue"
+  clusterQueue: "cluster-queue"

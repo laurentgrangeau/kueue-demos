@@ -18,5 +18,3 @@ spec:
         nominalQuota: 10
       - name: "ephemeral-storage"
         nominalQuota: 10Gi
-  admissionChecks:
-  - dws-prov

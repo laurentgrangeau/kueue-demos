@@ -5,6 +5,10 @@ metadata:
 spec:
   namespaceSelector: {} # Available to all namespaces
   queueingStrategy: BestEffortFIFO # Default queueing strategy
+  preemption:
+    withinClusterQueue: LowerOrNewerEqualPriority
+    borrowWithinCohort: LowerPriority
+    reclaimWithinCohort: LowerPriority
   resourceGroups:
   - coveredResources: ["cpu", "memory", "nvidia.com/gpu", "ephemeral-storage"]
     flavors:

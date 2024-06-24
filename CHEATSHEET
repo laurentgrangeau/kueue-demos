@@ -1,12 +1,63 @@
 ## Create GKE cluster
 gcloud container clusters create "kueue-demos" --zone "europe-west1-c" --cluster-version "1.29.5-gke.1060000" --machine-type "e2-standard-2"
 
+## Get credentials
+gcloud container clusters get-credentials kueue-demos --location europe-west1-c
+
 ## Apply Kueue
 kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.7.0/manifests.yaml
 
+## Get pods
+kubectl get pods -n kueue-system
+
+## Get all
+kubectl get clusterqueue
+kubectl get localkueue
+kubectl get resourceflavors
+
+## Deploy namespace
+kubectl apply -f team-a-namespace.yaml
+kubectl apply -f team-b-namespace.yaml
+kubectl get ns
+
+## Deploy default flavor
+kubectl apply -f default-flavor.yaml
+kubectl get flavor
+
+## Deploy cluster queue
+kubectl apply -f batch-cluster-queue.yaml
+kubectl get cq
+
+## Deploy local queue
+kubectl apply -f team-a-local-queue.yaml
+kubectl apply -f team-b-local-queue.yaml
+kubectl get lq -n team-a
+
+## Deploy job
+kubectl apply -f batch-job.yaml
+kubectl get clusterqueue cluster-queue -o wide
+kubectl get localqueue -n team-a
+kubectl get pods -n team-a
+
+# Priority scheduling
+## Deploy priority class
+kubectl apply -f dev-priority.yaml
+kubectl apply -f prod-priority.yaml
+
+## Deploy cluster queue
+kubectl apply -f priority-cluster-queue.yaml
+
+## Deploy dev priority job
+kubectl apply -f dev-job.yaml
+kubectl get pods -n team-a
+
+## Deply prod priority job
+kubectl apply -f prod-job.yaml
+kubectl get pods -n team-a
+
 # DWS
 ## Create t4 nodepool
-gcloud beta container node-pools create nvidia-t4s \
+gcloud container node-pools create nvidia-t4s \
     --cluster=kueue-demos \
     --location=europe-west1-c \
      --enable-queued-provisioning \
@@ -18,3 +69,27 @@ gcloud beta container node-pools create nvidia-t4s \
     --location-policy=ANY  \
     --reservation-affinity=none  \
     --no-enable-autorepair
+
+## Deploy admission check
+kubectl apply -f admission-check.yaml
+kubectl get admissioncheck
+
+## Deploy provision request config
+kubectl apply -f provision-request-config.yaml
+kubectl get provisioningrequestconfig
+
+## Deploy dws cluster queue
+kubectl apply -f dws-cluster-queue.yaml
+kubectl get cq
+
+## Deploy dws local queue
+kubectl apply -f dws-local-queue.yaml
+kubectl get lq
+
+## Deploy dws job
+kubectl apply -f dws-batch-job.yaml
+kubectl describe job sample-job
+kubectl get provreq
+# Take some time to be admitted
+kubectl get nodes
+kubectl get pods
