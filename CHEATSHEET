@@ -1,0 +1,20 @@
+## Create GKE cluster
+gcloud container clusters create "kueue-demos" --zone "europe-west1-c" --cluster-version "1.29.5-gke.1060000" --machine-type "e2-standard-2"
+
+## Apply Kueue
+kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.7.0/manifests.yaml
+
+# DWS
+## Create t4 nodepool
+gcloud beta container node-pools create nvidia-t4s \
+    --cluster=kueue-demos \
+    --location=europe-west1-c \
+     --enable-queued-provisioning \
+    --accelerator type=nvidia-tesla-t4,count=1,gpu-driver-version=latest \
+    --machine-type=n1-standard-8 \
+    --enable-autoscaling  \
+    --num-nodes=0   \
+    --total-max-nodes 10  \
+    --location-policy=ANY  \
+    --reservation-affinity=none  \
+    --no-enable-autorepair
