@@ -4,6 +4,7 @@ metadata:
   name: cluster-queue
 spec:
   namespaceSelector: {} # Available to all namespaces
+  cohort: product-a
   queueingStrategy: BestEffortFIFO # Default queueing strategy
   resourceGroups:
   - coveredResources: ["cpu", "memory", "nvidia.com/gpu", "ephemeral-storage"]

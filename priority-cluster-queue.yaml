@@ -7,7 +7,8 @@ spec:
   queueingStrategy: BestEffortFIFO # Default queueing strategy
   preemption:
     withinClusterQueue: LowerOrNewerEqualPriority
-    borrowWithinCohort: LowerPriority
+    borrowWithinCohort: 
+      policy: LowerPriority
     reclaimWithinCohort: LowerPriority
   resourceGroups:
   - coveredResources: ["cpu", "memory", "nvidia.com/gpu", "ephemeral-storage"]
@@ -22,5 +23,3 @@ spec:
         nominalQuota: 10
       - name: "ephemeral-storage"
         nominalQuota: 10Gi
-  admissionChecks:
-  - dws-prov

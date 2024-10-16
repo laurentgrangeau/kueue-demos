@@ -1,10 +1,11 @@
 apiVersion: kueue.x-k8s.io/v1beta1
 kind: ClusterQueue
 metadata:
-  name: dws-cluster-queue
+  name: strict-cluster-queue
 spec:
   namespaceSelector: {} # Available to all namespaces
-  queueingStrategy: BestEffortFIFO # Default queueing strategy
+  cohort: product-a
+  queueingStrategy: StrictFIFO # Default queueing strategy
   resourceGroups:
   - coveredResources: ["cpu", "memory", "nvidia.com/gpu", "ephemeral-storage"]
     flavors:
@@ -12,11 +13,11 @@ spec:
       resources:
       - name: "cpu"
         nominalQuota: 10
+        lendingLimit: 1
+        borrowingLimit: 1
       - name: "memory"
         nominalQuota: 10Gi
       - name: "nvidia.com/gpu"
         nominalQuota: 10
       - name: "ephemeral-storage"
         nominalQuota: 10Gi
-  admissionChecks:
-  - dws-prov

@@ -1,18 +1,19 @@
+# Demo 1
 ## Create GKE cluster
-gcloud container clusters create "kueue-demos" --zone "europe-west1-c" --cluster-version "1.29.5-gke.1060000" --machine-type "e2-standard-2"
+gcloud container clusters create "kueue-demos" --zone "europe-west1-c" --cluster-version "1.30.5-gke.1014001" --machine-type "e2-standard-2"
 
 ## Get credentials
 gcloud container clusters get-credentials kueue-demos --location europe-west1-c
 
 ## Apply Kueue
-kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.7.0/manifests.yaml
+kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.8.1/manifests.yaml
 
 ## Get pods
 kubectl get pods -n kueue-system
 
 ## Get all
 kubectl get clusterqueue
-kubectl get localkueue
+kubectl get localqueue
 kubectl get resourceflavors
 
 ## Deploy namespace
@@ -22,6 +23,12 @@ kubectl get ns
 
 ## Deploy default flavor
 kubectl apply -f default-flavor.yaml
+kubectl get flavor
+
+## Deploy other flavors
+kubectl apply -f flavor-ondemand-l4.yaml
+kubectl apply -f flavor-reservation-l4.yaml
+kubectl apply -f flavor-spot-l4.yaml
 kubectl get flavor
 
 ## Deploy cluster queue
@@ -39,7 +46,7 @@ kubectl get clusterqueue cluster-queue -o wide
 kubectl get localqueue -n team-a
 kubectl get pods -n team-a
 
-# Priority scheduling
+# Demo 2 - Priority scheduling
 ## Deploy priority class
 kubectl apply -f dev-priority.yaml
 kubectl apply -f prod-priority.yaml
@@ -55,7 +62,7 @@ kubectl get pods -n team-a
 kubectl apply -f prod-job.yaml
 kubectl get pods -n team-a
 
-# DWS
+# Demo 3 - DWS
 ## Create t4 nodepool
 gcloud container node-pools create nvidia-t4s \
     --cluster=kueue-demos \
@@ -63,11 +70,11 @@ gcloud container node-pools create nvidia-t4s \
      --enable-queued-provisioning \
     --accelerator type=nvidia-tesla-t4,count=1,gpu-driver-version=latest \
     --machine-type=n1-standard-8 \
-    --enable-autoscaling  \
-    --num-nodes=0   \
-    --total-max-nodes 10  \
-    --location-policy=ANY  \
-    --reservation-affinity=none  \
+    --enable-autoscaling \
+    --num-nodes=0 \
+    --total-max-nodes 10 \
+    --location-policy=ANY \
+    --reservation-affinity=none \
     --no-enable-autorepair
 
 ## Deploy admission check
@@ -90,6 +97,8 @@ kubectl get lq
 kubectl apply -f dws-batch-job.yaml
 kubectl describe job sample-job
 kubectl get provreq
+
 # Take some time to be admitted
 kubectl get nodes
 kubectl get pods
+

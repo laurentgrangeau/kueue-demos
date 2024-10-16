@@ -1,0 +1,16 @@
+apiVersion: kueue.x-k8s.io/v1beta1
+kind: ResourceFlavor
+metadata:
+  name: gpu-l4-spot
+spec:
+  nodeLabels:
+    cloud.google.com/gke-accelerator: nvidia-l4
+    cloud.google.com/gke-provisioning: spot
+    resource-type: spot
+  nodeTaints:
+    - effect: NoSchedule
+      key: nvidia.com/gpu
+      value: "true"
+    - effect: NoSchedule
+      key: spot
+      value: "true"
