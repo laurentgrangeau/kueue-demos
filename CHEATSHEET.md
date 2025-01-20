@@ -1,12 +1,12 @@
 # Demo 1
 ## Create GKE cluster
-gcloud container clusters create "kueue-demos" --zone "europe-west1-c" --cluster-version "1.30.5-gke.1014001" --machine-type "e2-standard-2"
+gcloud container clusters create "kueue-demos" --zone "europe-west1-c" --cluster-version "1.30.8-gke.1051000" --machine-type "e2-standard-2"
 
 ## Get credentials
 gcloud container clusters get-credentials kueue-demos --location europe-west1-c
 
 ## Apply Kueue
-kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.8.1/manifests.yaml
+kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.10.1/manifests.yaml
 
 ## Get pods
 kubectl get pods -n kueue-system
