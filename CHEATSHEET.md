@@ -102,3 +102,12 @@ kubectl get provreq
 kubectl get nodes
 kubectl get pods
 
+# Demo 4 - Topology Aware Scheduling
+cat tas-topology.yaml
+cat tas-flavor.yaml
+cat tas-queue.yaml
+
+# Demo 5 - Kubeflow training operator
+kubectl get configmaps kueue-manager-config -o yaml -n kueue-system
+kubectl apply --server-side -k "github.com/kubeflow/training-operator.git/manifests/overlays/standalone?ref=v1.8.1"
+cat tf-job.yaml
