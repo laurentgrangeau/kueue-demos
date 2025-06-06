@@ -1,7 +1,7 @@
 # Demo 1
 ## Create GKE cluster
 ```
-gcloud container clusters create "kueue-demos" --zone "europe-west1-c" --cluster-version "1.32.1-gke.1357001" --machine-type "e2-standard-2"
+gcloud container clusters create "kueue-demos" --zone "europe-west1-c" --cluster-version "1.32.4-gke.1236007" --machine-type "e2-standard-2"
 ```
 
 ## Get credentials
@@ -11,7 +11,7 @@ gcloud container clusters get-credentials kueue-demos --location europe-west1-c
 
 ## Apply Kueue
 ```
-kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.10.2/manifests.yaml
+kubectl apply --server-side -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.12.2/manifests.yaml
 ```
 
 ## Get pods
@@ -98,7 +98,24 @@ kubectl get pods -n team-a
 gcloud container node-pools create nvidia-t4s \
     --cluster=kueue-demos \
     --location=europe-west1-c \
-     --enable-queued-provisioning \
+    --enable-queued-provisioning \
+    --accelerator type=nvidia-tesla-t4,count=1,gpu-driver-version=latest \
+    --machine-type=n1-standard-8 \
+    --enable-autoscaling \
+    --num-nodes=0 \
+    --total-max-nodes 10 \
+    --location-policy=ANY \
+    --reservation-affinity=none \
+    --no-enable-autorepair
+```
+
+## Create t4-flex nodepool
+```
+gcloud container node-pools create nvidia-t4s-flex \
+    --cluster=kueue-demos \
+    --location=europe-west1-c \
+    --enable-queued-provisioning \
+    --flex-start \
     --accelerator type=nvidia-tesla-t4,count=1,gpu-driver-version=latest \
     --machine-type=n1-standard-8 \
     --enable-autoscaling \
@@ -156,6 +173,6 @@ cat tas-queue.yaml
 # Demo 5 - Kubeflow training operator
 ```
 kubectl get configmaps kueue-manager-config -o yaml -n kueue-system
-kubectl apply --server-side -k "github.com/kubeflow/training-operator.git/manifests/overlays/standalone?ref=v1.8.1"
+kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/manager?ref=master"
 cat tf-job.yaml
 ```
