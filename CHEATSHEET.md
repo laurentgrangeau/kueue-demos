@@ -1,7 +1,7 @@
 # Demo 1
 ## Create GKE cluster
 ```
-gcloud container clusters create "kueue-demos" --zone "europe-west1-c" --cluster-version "1.32.4-gke.1236007" --machine-type "e2-standard-2"
+gcloud container clusters create "kueue-demos" --zone "europe-west1-c" --cluster-version "1.32.4-gke.1353003" --machine-type "e2-standard-2"
 ```
 
 ## Get credentials
@@ -173,6 +173,8 @@ cat tas-queue.yaml
 # Demo 5 - Kubeflow training operator
 ```
 kubectl get configmaps kueue-manager-config -o yaml -n kueue-system
-kubectl apply --server-side -k "https://github.com/kubeflow/trainer.git/manifests/overlays/manager?ref=master"
+kubectl apply --server-side -k "github.com/kubeflow/training-operator.git/manifests/overlays/standalone?ref=v1.8.1"
+kubectl apply -f training-cluster-queue.yaml
+kubectl apply -f training-local-queue.yaml
 cat tf-job.yaml
 ```
